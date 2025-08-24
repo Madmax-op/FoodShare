@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Dashboard - 🌍 FoodShare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1>🌍 FoodShare</h1>
+                <span class="user-role">Donor Dashboard</span>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-email" id="userEmail">loading@email.com</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Quick Stats -->
+            <section class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon">🍽️</div>
+                    <div class="stat-content">
+                        <h3>Total Meals Donated</h3>
+                        <p class="stat-number" id="totalMeals">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🌱</div>
+                    <div class="stat-content">
+                        <h3>CO₂ Saved</h3>
+                        <p class="stat-number" id="co2Saved">0 kg</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🤝</div>
+                    <div class="stat-content">
+                        <h3>NGOs Helped</h3>
+                        <p class="stat-number" id="ngosHelped">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-content">
+                        <h3>Your Rank</h3>
+                        <p class="stat-number" id="userRank">#0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="actions-section">
+                <h2>Quick Actions</h2>
+                <div class="action-buttons">
+                    <button class="action-btn primary" onclick="showAddDonationForm()">
+                        ➕ Add Surplus Food
+                    </button>
+                    <button class="action-btn secondary" onclick="showPredictions()">
+                        🔮 View Predictions
+                    </button>
+                    <button class="action-btn secondary" onclick="showReports()">
+                        📊 Generate Reports
+                    </button>
+                    <button class="action-btn secondary" onclick="showProfile()">
+                        👤 Edit Profile
+                    </button>
+                </div>
+            </section>
+
+            <!-- Recent Donations -->
+            <section class="donations-section">
+                <div class="section-header">
+                    <h2>Recent Donations</h2>
+                    <button class="view-all-btn" onclick="showAllDonations()">View All</button>
+                </div>
+                <div class="donations-grid" id="recentDonations">
+                    <!-- Donations will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Impact Metrics -->
+            <section class="impact-section">
+                <h2>Your Impact</h2>
+                <div class="impact-grid">
+                    <div class="impact-card">
+                        <h3>Environmental Impact</h3>
+                        <div class="impact-metric">
+                            <span class="metric-value" id="co2Impact">0</span>
+                            <span class="metric-unit">kg CO₂ saved</span>
+                        </div>
+                        <p>Equivalent to planting <span id="treesEquivalent">0</span> trees</p>
+                    </div>
+                    <div class="impact-card">
+                        <h3>Social Impact</h3>
+                        <div class="impact-metric">
+                            <span class="metric-value" id="mealsImpact">0</span>
+                            <span class="metric-unit">meals provided</span>
+                        </div>
+                        <p>Helping <span id="peopleHelped">0</span> people in need</p>
+                    </div>
+                    <div class="impact-card">
+                        <h3>Community Impact</h3>
+                        <div class="impact-metric">
+                            <span class="metric-value" id="ngosImpact">0</span>
+                            <span class="metric-unit">NGOs supported</span>
+                        </div>
+                        <p>Strengthening local communities</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Badges & Achievements -->
+            <section class="badges-section">
+                <h2>Badges & Achievements</h2>
+                <div class="badges-grid" id="badgesGrid">
+                    <!-- Badges will be loaded here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <nav class="sidebar-nav">
+                <a href="#overview" class="nav-item active" onclick="showSection('overview')">
+                    📊 Overview
+                </a>
+                <a href="#donations" class="nav-item" onclick="showSection('donations')">
+                    🍽️ My Donations
+                </a>
+                <a href="#predictions" class="nav-item" onclick="showSection('predictions')">
+                    🔮 Predictions
+                </a>
+                <a href="#reports" class="nav-item" onclick="showSection('reports')">
+                    📈 Reports
+                </a>
+                <a href="#profile" class="nav-item" onclick="showSection('profile')">
+                    👤 Profile
+                </a>
+            </nav>
+        </aside>
+    </div>
+
+    <!-- Add Donation Modal -->
+    <div id="addDonationModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Surplus Food</h2>
+                <span class="close" onclick="closeModal('addDonationModal')">&times;</span>
+            </div>
+            <form id="addDonationForm" class="donation-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="foodType">Food Type</label>
+                        <select id="foodType" name="foodType" required>
+                            <option value="">Select food type</option>
+                            <option value="COOKED_MEAL">Cooked Meal</option>
+                            <option value="FRESH_FRUITS">Fresh Fruits</option>
+                            <option value="VEGETABLES">Vegetables</option>
+                            <option value="BREAD_BAKERY">Bread & Bakery</option>
+                            <option value="DAIRY_PRODUCTS">Dairy Products</option>
+                            <option value="PACKAGED_FOOD">Packaged Food</option>
+                            <option value="LEFTOVERS">Leftovers</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity (kg)</label>
+                        <input type="number" id="quantity" name="quantity" step="0.1" min="0.1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="foodDetails">Food Details</label>
+                    <textarea id="foodDetails" name="foodDetails" rows="3" placeholder="Describe the food items..." required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expiryTime">Expiry Time</label>
+                        <input type="datetime-local" id="expiryTime" name="expiryTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pickupTime">Preferred Pickup Time</label>
+                        <input type="datetime-local" id="pickupTime" name="pickupTime" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="pickupAddress">Pickup Address</label>
+                    <input type="text" id="pickupAddress" name="pickupAddress" placeholder="Enter pickup address" required>
+                </div>
+                <div class="form-group">
+                    <label for="specialInstructions">Special Instructions</label>
+                    <textarea id="specialInstructions" name="specialInstructions" rows="2" placeholder="Any special handling requirements..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="foodPhotos">Food Photos</label>
+                    <input type="file" id="foodPhotos" name="foodPhotos" multiple accept="image/*">
+                    <small>Upload photos to help NGOs understand what you're donating</small>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('addDonationModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Donation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html> 

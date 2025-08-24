@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgis/postgis:13-3.3
+    container_name: foodshare-postgres
+    environment:
+      POSTGRES_DB: food_donation_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwer
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - foodshare-network
+
+  # ML Prediction Service
+  ml-service:
+    build:
+      context: ./ml-prediction
+      dockerfile: Dockerfile
+    container_name: foodshare-ml-service
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+    depends_on:
+      - postgres
+    networks:
+      - foodshare-network
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: foodshare-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - DB_URL=jdbc:postgresql://postgres:5432/food_donation_db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=qwer
+    depends_on:
+      - postgres
+      - ml-service
+    networks:
+      - foodshare-network
+
+  # Frontend (Optional)
+  frontend:
+    image: nginx:alpine
+    container_name: foodshare-frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    depends_on:
+      - backend
+    networks:
+      - foodshare-network
+
+volumes:
+  postgres_data:
+
+networks:
+  foodshare-network:
+    driver: bridge
