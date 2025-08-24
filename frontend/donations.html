@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Donations - 🌍 FoodShare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .donations-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 20px;
+        }
+        
+        .page-header {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title h1 {
+            color: #10b981;
+            margin-bottom: 8px;
+        }
+        
+        .page-title p {
+            color: #64748b;
+            margin: 0;
+        }
+        
+        .back-btn {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-btn:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+        
+        .donations-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .donation-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .donation-item:hover {
+            border-color: #10b981;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+        }
+        
+        .donation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .donation-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .status-accepted {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+        
+        .status-delivered {
+            background: #d1fae5;
+            color: #059669;
+        }
+        
+        .status-cancelled {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .donation-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+            color: #1f2937;
+        }
+        
+        .donation-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #059669;
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .no-donations {
+            text-align: center;
+            padding: 48px;
+            color: #6b7280;
+        }
+        
+        .no-donations h3 {
+            margin-bottom: 16px;
+            color: #374151;
+        }
+        
+        .create-donation-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .create-donation-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="donations-container">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>🍽️ My Food Donations</h1>
+                <p>Track and manage your food donations</p>
+            </div>
+            <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+        </div>
+
+        <div class="donations-content">
+            <div id="donationsList">
+                <!-- Donations will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        function checkAuth() {
+            const token = localStorage.getItem('foodshare_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            loadDonations();
+        }
+
+        // Load donations from localStorage or API
+        async function loadDonations() {
+            const donations = JSON.parse(localStorage.getItem('foodshare_donations') || '[]');
+            
+            if (donations.length === 0) {
+                showNoDonations();
+            } else {
+                displayDonations(donations);
+            }
+        }
+
+        // Display donations
+        function displayDonations(donations) {
+            const donationsList = document.getElementById('donationsList');
+            donationsList.innerHTML = '';
+
+            donations.forEach(donation => {
+                const donationElement = createDonationElement(donation);
+                donationsList.appendChild(donationElement);
+            });
+        }
+
+        // Create donation element
+        function createDonationElement(donation) {
+            const div = document.createElement('div');
+            div.className = 'donation-item';
+            
+            const statusClass = getStatusClass(donation.status);
+            const statusText = getStatusText(donation.status);
+            
+            div.innerHTML = `
+                <div class="donation-header">
+                    <h3>Donation #${donation.id}</h3>
+                    <span class="donation-status ${statusClass}">${statusText}</span>
+                </div>
+                <div class="donation-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Food Details</span>
+                        <span class="detail-value">${donation.foodDetails || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Quantity</span>
+                        <span class="detail-value">${donation.quantity || 'N/A'} kg</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Food Type</span>
+                        <span class="detail-value">${donation.foodType || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Expiry Time</span>
+                        <span class="detail-value">${formatDate(donation.expiryTime)}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Pickup Time</span>
+                        <span class="detail-value">${formatDate(donation.pickupTime)}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Created</span>
+                        <span class="detail-value">${formatDate(donation.createdAt)}</span>
+                    </div>
+                </div>
+                <div class="donation-actions">
+                    ${getActionButtons(donation)}
+                </div>
+            `;
+            
+            return div;
+        }
+
+        // Get status CSS class
+        function getStatusClass(status) {
+            switch(status?.toLowerCase()) {
+                case 'pending': return 'status-pending';
+                case 'accepted': return 'status-accepted';
+                case 'delivered': return 'status-delivered';
+                case 'cancelled': return 'status-cancelled';
+                default: return 'status-pending';
+            }
+        }
+
+        // Get status display text
+        function getStatusText(status) {
+            switch(status?.toLowerCase()) {
+                case 'pending': return '⏳ Pending';
+                case 'accepted': return '✅ Accepted';
+                case 'delivered': return '🎉 Delivered';
+                case 'cancelled': return '❌ Cancelled';
+                default: return '⏳ Pending';
+            }
+        }
+
+        // Get action buttons based on status
+        function getActionButtons(donation) {
+            const status = donation.status?.toLowerCase();
+            
+            if (status === 'pending') {
+                return `
+                    <button class="action-btn btn-primary" onclick="editDonation(${donation.id})">✏️ Edit</button>
+                    <button class="action-btn btn-danger" onclick="cancelDonation(${donation.id})">❌ Cancel</button>
+                `;
+            } else if (status === 'accepted') {
+                return `
+                    <button class="action-btn btn-primary" onclick="viewDetails(${donation.id})">👁️ View Details</button>
+                `;
+            } else {
+                return `
+                    <button class="action-btn btn-secondary" onclick="viewDetails(${donation.id})">👁️ View Details</button>
+                    <button class="action-btn btn-primary" onclick="duplicateDonation(${donation.id})">🔄 Duplicate</button>
+                `;
+            }
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                return new Date(dateString).toLocaleDateString();
+            } catch {
+                return 'N/A';
+            }
+        }
+
+        // Show no donations message
+        function showNoDonations() {
+            const donationsList = document.getElementById('donationsList');
+            donationsList.innerHTML = `
+                <div class="no-donations">
+                    <h3>No donations yet</h3>
+                    <p>Start making a difference by donating food to those in need.</p>
+                    <button class="create-donation-btn" onclick="createDonation()">🍽️ Create First Donation</button>
+                </div>
+            `;
+        }
+
+        // Action functions
+        function editDonation(id) {
+            alert(`Edit donation ${id} - This functionality can be implemented`);
+        }
+
+        function cancelDonation(id) {
+            if (confirm('Are you sure you want to cancel this donation?')) {
+                alert(`Cancel donation ${id} - This functionality can be implemented`);
+            }
+        }
+
+        function viewDetails(id) {
+            alert(`View details for donation ${id} - This functionality can be implemented`);
+        }
+
+        function duplicateDonation(id) {
+            alert(`Duplicate donation ${id} - This functionality can be implemented`);
+        }
+
+        function createDonation() {
+            alert('Create new donation - This functionality can be implemented');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
+</body>
+</html>

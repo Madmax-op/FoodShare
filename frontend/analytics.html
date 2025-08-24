@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - 🌍 FoodShare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .analytics-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 20px;
+        }
+        
+        .page-header {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title h1 {
+            color: #10b981;
+            margin-bottom: 8px;
+        }
+        
+        .page-title p {
+            color: #64748b;
+            margin: 0;
+        }
+        
+        .back-btn {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-btn:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+        
+        .analytics-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 8px;
+        }
+        
+        .metric-label {
+            font-size: 1.125rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .metric-description {
+            font-size: 0.875rem;
+            color: #9ca3af;
+            margin-top: 8px;
+        }
+        
+        .charts-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+        
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 24px;
+        }
+        
+        .chart-placeholder {
+            background: #f8fafc;
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 48px;
+            text-align: center;
+            color: #6b7280;
+        }
+        
+        .chart-placeholder h3 {
+            margin-bottom: 12px;
+            color: #374151;
+        }
+        
+        .badges-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+        }
+        
+        .badge-item {
+            text-align: center;
+            padding: 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .badge-item:hover {
+            border-color: #10b981;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+        }
+        
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .badge-name {
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .badge-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 48px;
+            color: #6b7280;
+        }
+        
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            border: 1px solid #fecaca;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-item {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #10b981;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="analytics-container">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>📊 Analytics & Impact</h1>
+                <p>Track your donation impact and achievements</p>
+            </div>
+            <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+        </div>
+
+        <!-- Error Messages -->
+        <div id="errorContainer"></div>
+
+        <!-- Loading State -->
+        <div id="loadingContainer" class="loading">
+            <h3>Loading your analytics...</h3>
+            <p>Please wait while we fetch your data.</p>
+        </div>
+
+        <!-- Analytics Content -->
+        <div id="analyticsContent" style="display: none;">
+            <div class="analytics-content">
+                <div class="metric-card">
+                    <div class="metric-icon">🍽️</div>
+                    <div class="metric-value" id="totalMeals">0</div>
+                    <div class="metric-label">Total Meals Donated</div>
+                    <div class="metric-description">Meals provided to those in need</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">🌱</div>
+                    <div class="metric-value" id="co2Saved">0</div>
+                    <div class="metric-label">CO2 Saved (kg)</div>
+                    <div class="metric-description">Environmental impact</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">📦</div>
+                    <div class="metric-value" id="totalDonations">0</div>
+                    <div class="metric-label">Total Donations</div>
+                    <div class="metric-description">Food packages donated</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon">🤝</div>
+                    <div class="metric-value" id="ngosHelped">0</div>
+                    <div class="metric-label">NGOs Helped</div>
+                    <div class="metric-description">Organizations supported</div>
+                </div>
+            </div>
+
+            <div class="charts-section">
+                <h2 class="chart-title">📈 Donation Trends</h2>
+                <div class="chart-container">
+                    <canvas id="donationTrendsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="charts-section">
+                <h2 class="chart-title">🍽️ Food Type Distribution</h2>
+                <div class="chart-container">
+                    <canvas id="foodTypeChart"></canvas>
+                </div>
+            </div>
+
+            <div class="charts-section">
+                <h2 class="chart-title">📊 Monthly Performance</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="monthlyDonations">0</div>
+                        <div class="stat-label">This Month</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="monthlyMeals">0</div>
+                        <div class="stat-label">Meals This Month</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="monthlyCO2">0</div>
+                        <div class="stat-label">CO2 Saved This Month</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="monthlyRank">0</div>
+                        <div class="stat-label">Monthly Rank</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="badges-section">
+                <h2 class="chart-title">🏆 Your Badges</h2>
+                <div class="badges-grid" id="badgesGrid">
+                    <!-- Badges will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dummy data for charts and analytics
+        const dummyData = {
+            totalMealsDonated: 847,
+            co2Saved: 156.8,
+            totalDonations: 23,
+            ngosHelped: 8,
+            monthlyDonations: 4,
+            monthlyMeals: 147,
+            monthlyCO2: 27.3,
+            monthlyRank: 12,
+            badges: [
+                {
+                    type: 'first_donation',
+                    name: 'First Step',
+                    description: 'Made your first donation'
+                },
+                {
+                    type: 'regular_donor',
+                    name: 'Regular Hero',
+                    description: 'Donated 5+ times this month'
+                },
+                {
+                    type: 'environmental_hero',
+                    name: 'Eco Warrior',
+                    description: 'Saved 100+ kg of CO2'
+                },
+                {
+                    type: 'community_champion',
+                    name: 'Community Star',
+                    description: 'Helped 5+ NGOs'
+                },
+                {
+                    type: 'food_saver',
+                    name: 'Food Guardian',
+                    description: 'Donated 500+ meals'
+                },
+                {
+                    type: 'ngo_supporter',
+                    name: 'NGO Ally',
+                    description: 'Supported 8+ organizations'
+                }
+            ],
+            donationTrends: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 40, 38, 45]
+            },
+            foodTypeDistribution: {
+                labels: ['Grains', 'Vegetables', 'Fruits', 'Dairy', 'Proteins', 'Baked Goods'],
+                data: [35, 25, 20, 10, 7, 3]
+            }
+        };
+
+        // Check authentication
+        function checkAuth() {
+            const token = localStorage.getItem('foodshare_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            loadAnalytics();
+        }
+
+        // Load analytics data
+        async function loadAnalytics() {
+            try {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Use dummy data for now
+                displayAnalytics(dummyData);
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                showError('Error loading analytics: ' + error.message);
+            }
+        }
+
+        // Display analytics data
+        function displayAnalytics(impact) {
+            // Hide loading, show content
+            document.getElementById('loadingContainer').style.display = 'none';
+            document.getElementById('analyticsContent').style.display = 'block';
+
+            // Update metrics
+            document.getElementById('totalMeals').textContent = impact.totalMealsDonated || 0;
+            document.getElementById('co2Saved').textContent = impact.co2Saved || 0;
+            document.getElementById('totalDonations').textContent = impact.totalDonations || 0;
+            document.getElementById('ngosHelped').textContent = impact.ngosHelped || 0;
+
+            // Update monthly stats
+            document.getElementById('monthlyDonations').textContent = impact.monthlyDonations || 0;
+            document.getElementById('monthlyMeals').textContent = impact.monthlyMeals || 0;
+            document.getElementById('monthlyCO2').textContent = impact.monthlyCO2 || 0;
+            document.getElementById('monthlyRank').textContent = '#' + (impact.monthlyRank || 0);
+
+            // Display badges
+            displayBadges(impact.badges || []);
+
+            // Create charts
+            createDonationTrendsChart(impact.donationTrends);
+            createFoodTypeChart(impact.foodTypeDistribution);
+        }
+
+        // Create donation trends chart
+        function createDonationTrendsChart(data) {
+            const ctx = document.getElementById('donationTrendsChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Donations',
+                        data: data.data,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#10b981',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            borderColor: '#10b981',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                color: '#6b7280'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                color: '#6b7280'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Create food type distribution chart
+        function createFoodTypeChart(data) {
+            const ctx = document.getElementById('foodTypeChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        data: data.data,
+                        backgroundColor: [
+                            '#10b981',
+                            '#3b82f6',
+                            '#f59e0b',
+                            '#ef4444',
+                            '#8b5cf6',
+                            '#06b6d4'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Display badges
+        function displayBadges(badges) {
+            const badgesGrid = document.getElementById('badgesGrid');
+            
+            if (badges.length === 0) {
+                badgesGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 32px; color: #6b7280;">
+                        <h3>No badges yet</h3>
+                        <p>Keep donating to earn badges and recognition!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            badgesGrid.innerHTML = '';
+            badges.forEach(badge => {
+                const badgeElement = createBadgeElement(badge);
+                badgesGrid.appendChild(badgeElement);
+            });
+        }
+
+        // Create badge element
+        function createBadgeElement(badge) {
+            const div = document.createElement('div');
+            div.className = 'badge-item';
+            
+            div.innerHTML = `
+                <div class="badge-icon">${getBadgeIcon(badge.type)}</div>
+                <div class="badge-name">${badge.name || 'Badge'}</div>
+                <div class="badge-description">${badge.description || 'Achievement unlocked'}</div>
+            `;
+            
+            return div;
+        }
+
+        // Get badge icon based on type
+        function getBadgeIcon(type) {
+            const iconMap = {
+                'first_donation': '🎉',
+                'regular_donor': '🌟',
+                'environmental_hero': '🌱',
+                'community_champion': '🤝',
+                'food_saver': '🍽️',
+                'ngo_supporter': '🏢',
+                'volunteer': '👥',
+                'leader': '👑'
+            };
+            return iconMap[type] || '🏆';
+        }
+
+        // Show error message
+        function showError(message) {
+            document.getElementById('loadingContainer').style.display = 'none';
+            
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = `
+                <div class="error-message">
+                    <strong>Error:</strong> ${message}
+                </div>
+            `;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
+</body>
+</html>

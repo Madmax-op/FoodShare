@@ -1,0 +1,64 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+SETUP_README.md
+PROJECT_OVERVIEW.md
+EMAIL_SETUP.md
+MAPS_API_SETUP.md
+
+# Scripts
+*.sh
+*.ps1
+install.sh
+setup.sh
+setup-env.sh
+start.sh
+stop.sh
+test-*.sh
+
+# IDE files
+*.iml
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Docker files (except the main Dockerfile)
+docker/
+docker-compose.yml
+
+# Database files
+database/
+*.sql
+
+# Target directories
+backend/target/
+ml-prediction/__pycache__/
+ml-prediction/*.pyc
+
+# Node modules (if any)
+node_modules/
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Test files
+**/test/
+**/*Test.java
+**/*Tests.java

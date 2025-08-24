@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - 🌍 FoodShare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .profile-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 20px;
+        }
+        
+        .page-header {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title h1 {
+            color: #10b981;
+            margin-bottom: 8px;
+        }
+        
+        .page-title p {
+            color: #64748b;
+            margin: 0;
+        }
+        
+        .back-btn {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-btn:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+        
+        .profile-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .profile-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            color: #374151;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .profile-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+        
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .info-value {
+            color: #6b7280;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 48px;
+            color: #6b7280;
+        }
+        
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            border: 1px solid #fecaca;
+        }
+        
+        .success-message {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            border: 1px solid #bbf7d0;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>⚙️ Profile Settings</h1>
+                <p>Manage your account and preferences</p>
+            </div>
+            <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+        </div>
+
+        <!-- Messages Container -->
+        <div id="messageContainer"></div>
+
+        <!-- Loading State -->
+        <div id="loadingContainer" class="loading">
+            <h3>Loading your profile...</h3>
+            <p>Please wait while we fetch your information.</p>
+        </div>
+
+        <!-- Profile Content -->
+        <div id="profileContent" style="display: none;">
+            <div class="profile-content">
+                <div class="profile-section">
+                    <h2 class="section-title">👤 Personal Information</h2>
+                    <form id="profileForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea id="address" name="address" placeholder="Enter your full address"></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <input type="text" id="state" name="state">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="zipCode">ZIP Code</label>
+                            <input type="text" id="zipCode" name="zipCode">
+                        </div>
+                        
+                        <div class="profile-actions">
+                            <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">🔄 Reset</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="profile-section">
+                    <h2 class="section-title">🔐 Account Settings</h2>
+                    
+                    <div class="profile-info">
+                        <div class="info-item">
+                            <span class="info-label">Account Type</span>
+                            <span class="info-value" id="accountType">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Member Since</span>
+                            <span class="info-value" id="memberSince">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Last Login</span>
+                            <span class="info-value" id="lastLogin">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Status</span>
+                            <span class="info-value" id="accountStatus">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-actions">
+                        <button type="button" class="btn btn-primary" onclick="changePassword()">🔑 Change Password</button>
+                        <button type="button" class="btn btn-secondary" onclick="exportData()">📥 Export Data</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteAccount()">🗑️ Delete Account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        function checkAuth() {
+            const token = localStorage.getItem('foodshare_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            loadProfile();
+        }
+
+        // Load profile data
+        async function loadProfile() {
+            try {
+                const token = localStorage.getItem('foodshare_token');
+                const response = await fetch('http://localhost:8080/api/donor/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const profile = await response.json();
+                    displayProfile(profile);
+                } else {
+                    showMessage('Failed to load profile data', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showMessage('Error loading profile: ' + error.message, 'error');
+            }
+        }
+
+        // Display profile data
+        function displayProfile(profile) {
+            // Hide loading, show content
+            document.getElementById('loadingContainer').style.display = 'none';
+            document.getElementById('profileContent').style.display = 'block';
+
+            // Fill form fields
+            document.getElementById('firstName').value = profile.firstName || '';
+            document.getElementById('lastName').value = profile.lastName || '';
+            document.getElementById('email').value = profile.email || '';
+            document.getElementById('phone').value = profile.phone || '';
+            document.getElementById('address').value = profile.address || '';
+            document.getElementById('city').value = profile.city || '';
+            document.getElementById('state').value = profile.state || '';
+            document.getElementById('zipCode').value = profile.zipCode || '';
+
+            // Fill account info
+            document.getElementById('accountType').textContent = profile.role || 'Donor';
+            document.getElementById('memberSince').textContent = formatDate(profile.createdAt) || 'N/A';
+            document.getElementById('lastLogin').textContent = formatDate(profile.lastLoginAt) || 'N/A';
+            document.getElementById('accountStatus').textContent = profile.active ? 'Active' : 'Inactive';
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                return new Date(dateString).toLocaleDateString();
+            } catch {
+                return 'N/A';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            try {
+                const formData = new FormData(e.target);
+                const profileData = Object.fromEntries(formData.entries());
+                
+                const token = localStorage.getItem('foodshare_token');
+                const response = await fetch('http://localhost:8080/api/donor/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(profileData)
+                });
+
+                if (response.ok) {
+                    showMessage('Profile updated successfully!', 'success');
+                } else {
+                    showMessage('Failed to update profile', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showMessage('Error updating profile: ' + error.message, 'error');
+            }
+        });
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('profileForm').reset();
+            showMessage('Form reset to original values', 'info');
+        }
+
+        // Change password
+        function changePassword() {
+            alert('Change password functionality - This can be implemented');
+        }
+
+        // Export data
+        function exportData() {
+            alert('Export data functionality - This can be implemented');
+        }
+
+        // Delete account
+        function deleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                alert('Delete account functionality - This can be implemented');
+            }
+        }
+
+        // Show message
+        function showMessage(message, type = 'info') {
+            const messageContainer = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            
+            messageDiv.className = type === 'error' ? 'error-message' : 
+                                 type === 'success' ? 'success-message' : 'info-message';
+            messageDiv.textContent = message;
+            
+            messageContainer.appendChild(messageDiv);
+            
+            // Auto-remove message after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 5000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
+</body>
+</html>

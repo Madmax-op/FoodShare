@@ -123,6 +123,29 @@
         .back-home a:hover {
             text-decoration: underline;
         }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 16px 0;
+            border: 1px solid #fecaca;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 16px 0;
+            border: 1px solid #bbf7d0;
+        }
     </style>
 </head>
 <body>
@@ -135,6 +158,9 @@
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
 
+        <!-- Messages Container -->
+        <div id="messageContainer"></div>
+
         <div class="dashboard-content">
             <div class="dashboard-card">
                 <div class="card-header">
@@ -143,7 +169,7 @@
                 </div>
                 <div class="card-content">
                     <p>Manage your food donations and track their status. View accepted donations and coordinate with NGOs.</p>
-                    <button class="action-btn">View Donations</button>
+                    <button class="action-btn" onclick="viewDonations()">View Donations</button>
                 </div>
             </div>
 
@@ -154,7 +180,7 @@
                 </div>
                 <div class="card-content">
                     <p>Connect with nearby NGOs and coordinate food distribution. Find the best matches for your donations.</p>
-                    <button class="action-btn">Find NGOs</button>
+                    <button class="action-btn" onclick="findNGOs()">Find NGOs</button>
                 </div>
             </div>
 
@@ -165,7 +191,7 @@
                 </div>
                 <div class="card-content">
                     <p>View your donation history, impact metrics, and AI-powered predictions for future donations.</p>
-                    <button class="action-btn">View Analytics</button>
+                    <button class="action-btn" onclick="viewAnalytics()">View Analytics</button>
                 </div>
             </div>
 
@@ -176,7 +202,7 @@
                 </div>
                 <div class="card-content">
                     <p>Update your profile information, change preferences, and manage your account settings.</p>
-                    <button class="action-btn">Manage Profile</button>
+                    <button class="action-btn" onclick="manageProfile()">Manage Profile</button>
                 </div>
             </div>
         </div>
@@ -195,14 +221,194 @@
                 return;
             }
             
-            // You can add additional token validation here
-            // For now, just check if token exists
+            // Load user profile on dashboard load
+            loadUserProfile();
         }
 
         function logout() {
             localStorage.removeItem('foodshare_token');
             localStorage.removeItem('foodshare_user');
             window.location.href = 'index.html';
+        }
+
+        // Load user profile information
+        async function loadUserProfile() {
+            try {
+                const token = localStorage.getItem('foodshare_token');
+                const response = await fetch('http://localhost:8080/api/auth/me', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+                    localStorage.setItem('foodshare_user', JSON.stringify(user));
+                    console.log('User profile loaded:', user);
+                }
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+            }
+        }
+
+        // View Donations functionality
+        async function viewDonations() {
+            try {
+                showMessage('Loading donations...', 'info');
+                const token = localStorage.getItem('foodshare_token');
+                
+                const response = await fetch('http://localhost:8080/api/donor/donations', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const donations = await response.json();
+                    showMessage(`Found ${donations.length} donations`, 'success');
+                    
+                    // Store donations in localStorage for the donations page
+                    localStorage.setItem('foodshare_donations', JSON.stringify(donations));
+                    
+                    // Navigate to donations page (you can create this page)
+                    setTimeout(() => {
+                        window.location.href = 'donations.html';
+                    }, 1000);
+                } else {
+                    showMessage('Failed to load donations', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading donations:', error);
+                showMessage('Error loading donations: ' + error.message, 'error');
+            }
+        }
+
+        // Find NGOs functionality
+        async function findNGOs() {
+            try {
+                showMessage('Finding nearby NGOs...', 'info');
+                
+                // For now, using mock coordinates (you can get user's location)
+                const mockLat = 28.6139; // Delhi coordinates
+                const mockLng = 77.2090;
+                
+                const response = await fetch(`http://localhost:8080/api/ngo/nearby?latitude=${mockLat}&longitude=${mockLng}&radiusKm=50.0`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('foodshare_token')}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const ngos = await response.json();
+                    showMessage(`Found ${ngos.length} nearby NGOs`, 'success');
+                    
+                    // Store NGOs in localStorage for the NGOs page
+                    localStorage.setItem('foodshare_ngos', JSON.stringify(ngos));
+                    
+                    // Navigate to NGOs page (you can create this page)
+                    setTimeout(() => {
+                        window.location.href = 'ngos.html';
+                    }, 1000);
+                } else {
+                    showMessage('Failed to find NGOs', 'error');
+                }
+            } catch (error) {
+                console.error('Error finding NGOs:', error);
+                showMessage('Error finding NGOs: ' + error.message, 'error');
+            }
+        }
+
+        // View Analytics functionality
+        async function viewAnalytics() {
+            try {
+                showMessage('Loading analytics...', 'info');
+                const token = localStorage.getItem('foodshare_token');
+                
+                const response = await fetch('http://localhost:8080/api/donor/impact', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const impact = await response.json();
+                    showMessage('Analytics loaded successfully', 'success');
+                    
+                    // Store analytics in localStorage for the analytics page
+                    localStorage.setItem('foodshare_analytics', JSON.stringify(impact));
+                    
+                    // Navigate to analytics page (you can create this page)
+                    setTimeout(() => {
+                        window.location.href = 'analytics.html';
+                    }, 1000);
+                } else {
+                    showMessage('Failed to load analytics', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                showMessage('Error loading analytics: ' + error.message, 'error');
+            }
+        }
+
+        // Manage Profile functionality
+        async function manageProfile() {
+            try {
+                showMessage('Loading profile...', 'info');
+                const token = localStorage.getItem('foodshare_token');
+                
+                const response = await fetch('http://localhost:8080/api/donor/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const profile = await response.json();
+                    showMessage('Profile loaded successfully', 'success');
+                    
+                    // Store profile in localStorage for the profile page
+                    localStorage.setItem('foodshare_profile', JSON.stringify(profile));
+                    
+                    // Navigate to profile page (you can create this page)
+                    setTimeout(() => {
+                        window.location.href = 'profile.html';
+                    }, 1000);
+                } else {
+                    showMessage('Failed to load profile', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showMessage('Error loading profile: ' + error.message, 'error');
+            }
+        }
+
+        // Utility function to show messages
+        function showMessage(message, type = 'info') {
+            const messageContainer = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            
+            messageDiv.className = type === 'error' ? 'error-message' : 
+                                 type === 'success' ? 'success-message' : 'info-message';
+            messageDiv.textContent = message;
+            
+            messageContainer.appendChild(messageDiv);
+            
+            // Auto-remove message after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 5000);
         }
 
         // Check auth on page load
