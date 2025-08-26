@@ -4,294 +4,415 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - 🌍 FoodShare</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="auth-styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-10px, -10px) rotate(1deg); }
+            50% { transform: translate(10px, -5px) rotate(-1deg); }
+            75% { transform: translate(-5px, 10px) rotate(1deg); }
+        }
+
+        .register-container {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            background: linear-gradient(135deg, #10b981, #34d399, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo p {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #f1f5f9;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            color: #f1f5f9;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #64748b;
+        }
+
+        .form-group select option {
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .register-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .register-btn:hover::before {
+            left: 100%;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+        }
+
+        .register-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(148, 163, 184, 0.2);
+        }
+
+        .divider span {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 0 1rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .login-link a {
+            color: #10b981;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #34d399;
+        }
+
+        .back-home {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .back-home a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-home a:hover {
+            color: #10b981;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="auth-container">
-        <!-- Background Pattern -->
-        <div class="auth-bg-pattern"></div>
-        
-        <!-- Registration Form -->
-        <div class="auth-form-container register-container">
-            <div class="auth-header">
-                <a href="index.html" class="logo-link">
-                    <h1>🌍 FoodShare</h1>
-                </a>
-                <p class="auth-subtitle">Join us in making a difference</p>
-            </div>
-
-            <!-- Registration Type Tabs -->
-            <div class="registration-tabs">
-                <button class="tab-btn active" data-tab="donor">
-                    <span>🍽️</span>
-                    I want to donate food
-                </button>
-                <button class="tab-btn" data-tab="ngo">
-                    <span>🤝</span>
-                    I'm an NGO
-                </button>
-            </div>
-
-            <!-- Donor Registration Form -->
-            <form id="donorForm" class="auth-form registration-form active" data-type="donor">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="donorName">Full Name</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">👤</span>
-                            <input type="text" id="donorName" name="name" required placeholder="Enter your full name">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="donorEmail">Email Address</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">📧</span>
-                            <input type="email" id="donorEmail" name="email" required placeholder="Enter your email">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="donorPhone">Phone Number</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">📱</span>
-                            <input type="tel" id="donorPhone" name="phone" required placeholder="Enter your phone number">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="donorType">Donor Type</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🏢</span>
-                            <select id="donorType" name="donorType" required>
-                                <option value="">Select donor type</option>
-                                <option value="RESTAURANT">Restaurant</option>
-                                <option value="EVENT">Event/Catering</option>
-                                <option value="HOSTEL">Hostel/Mess</option>
-                                <option value="CORPORATE">Corporate Cafeteria</option>
-                                <option value="BAKERY">Bakery</option>
-                                <option value="INDIVIDUAL">Individual</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="donorCity">City</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🏙️</span>
-                            <input type="text" id="donorCity" name="city" required placeholder="Enter your city">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="donorDescription">Description</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">📝</span>
-                            <textarea id="donorDescription" name="description" placeholder="Tell us about your organization" rows="3"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="donorLatitude">Latitude</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">📍</span>
-                            <input type="number" id="donorLatitude" name="latitude" step="0.000001" required placeholder="e.g., 40.7128">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="donorLongitude">Longitude</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">📍</span>
-                            <input type="number" id="donorLongitude" name="longitude" step="0.000001" required placeholder="e.g., -74.0060">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-outline" data-action="get-location" style="width: 100%; margin-top: 8px;">
-                            📍 Detect My Location Automatically
-                        </button>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="donorPassword">Password</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🔒</span>
-                            <input type="password" id="donorPassword" name="password" required placeholder="Create a password">
-                            <button type="button" class="password-toggle" onclick="togglePassword('donorPassword')">👁️</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="donorConfirmPassword">Confirm Password</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🔒</span>
-                            <input type="password" id="donorConfirmPassword" name="confirmPassword" required placeholder="Confirm your password">
-                            <button type="button" class="password-toggle" onclick="togglePassword('donorConfirmPassword')">👁️</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-options">
-                    <label class="checkbox-wrapper">
-                        <input type="checkbox" id="donorTerms" required>
-                        <span class="checkmark"></span>
-                        I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>
-                    </label>
-                </div>
-
-                <button type="submit" class="auth-submit-btn">
-                    <span class="btn-text">Create Donor Account</span>
-                    <span class="btn-loader" style="display: none;">
-                        <div class="spinner"></div>
-                    </span>
-                </button>
-            </form>
-
-            <!-- NGO Registration Form -->
-            <form id="ngoForm" class="auth-form registration-form" data-type="ngo">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="ngoName">Organization Name</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🏢</span>
-                            <input type="text" id="ngoName" name="name" required placeholder="Enter organization name">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="ngoEmail">Email Address</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">📧</span>
-                            <input type="email" id="ngoEmail" name="email" required placeholder="Enter organization email">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="ngoPhone">Phone Number</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">📱</span>
-                            <input type="tel" id="ngoPhone" name="phone" required placeholder="Enter contact phone number">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="ngoType">Organization Type</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🏛️</span>
-                            <select id="ngoType" name="organizationType" required>
-                                <option value="">Select organization type</option>
-                                <option value="FOOD_BANK">Food Bank</option>
-                                <option value="SHELTER">Homeless Shelter</option>
-                                <option value="SENIOR_CENTER">Senior Center</option>
-                                <option value="COMMUNITY_CENTER">Community Center</option>
-                                <option value="ORPHANAGE">Orphanage</option>
-                                <option value="SCHOOL">School</option>
-                                <option value="HOSPITAL">Hospital</option>
-                                <option value="OTHER">Other</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="ngoCity">City</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🏙️</span>
-                            <input type="text" id="ngoCity" name="city" required placeholder="Enter your city">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="ngoDescription">Description</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">📝</span>
-                            <textarea id="ngoDescription" name="description" placeholder="Tell us about your organization" rows="3"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="ngoLatitude">Latitude</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">📍</span>
-                            <input type="number" id="ngoLatitude" name="latitude" step="0.000001" required placeholder="e.g., 40.7128">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="ngoLongitude">Longitude</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">📍</span>
-                            <input type="number" id="ngoLongitude" name="longitude" step="0.000001" required placeholder="e.g., -74.0060">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-outline" data-action="get-location" style="width: 100%; margin-top: 8px;">
-                            📍 Detect My Location Automatically
-                        </button>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="ngoPassword">Password</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🔒</span>
-                            <input type="password" id="ngoPassword" name="password" required placeholder="Create a password">
-                            <button type="button" class="password-toggle" onclick="togglePassword('ngoPassword')">👁️</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="ngoConfirmPassword">Confirm Password</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🔒</span>
-                            <input type="password" id="ngoConfirmPassword" name="confirmPassword" required placeholder="Confirm your password">
-                            <button type="button" class="password-toggle" onclick="togglePassword('ngoConfirmPassword')">👁️</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-options">
-                    <label class="checkbox-wrapper">
-                        <input type="checkbox" id="ngoTerms" required>
-                        <span class="checkmark"></span>
-                        I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>
-                    </label>
-                </div>
-
-                <button type="submit" class="auth-submit-btn">
-                    <span class="btn-text">Create NGO Account</span>
-                    <span class="btn-loader" style="display: none;">
-                        <div class="spinner"></div>
-                    </span>
-                </button>
-            </form>
-
-            <!-- Success/Error Messages -->
-            <div id="messageContainer" class="message-container" style="display: none;"></div>
-
-            <div class="auth-footer">
-                <p>Already have an account? <a href="login.html">Sign in here</a></p>
-            </div>
+    <div class="register-container">
+        <div class="logo">
+            <h1>🌍 FoodShare</h1>
+            <p>Join us in making a difference! Create your account.</p>
         </div>
 
-        <!-- Decorative Elements -->
-        <div class="auth-decoration">
-            <div class="floating-icon" style="--delay: 0s">🍽️</div>
-            <div class="floating-icon" style="--delay: 1s">🤝</div>
-            <div class="floating-icon" style="--delay: 2s">🌱</div>
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <form id="registerForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" placeholder="Enter your city" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="userType">I want to register as</label>
+                <select id="userType" name="userType" required>
+                    <option value="">Select your role</option>
+                    <option value="DONOR">Food Donor</option>
+                    <option value="NGO">NGO/Organization</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Create a password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+            </div>
+            
+            <button type="submit" class="register-btn" id="registerBtn">
+                Create Account
+            </button>
+        </form>
+
+        <div class="divider">
+            <span>Already have an account?</span>
+        </div>
+
+        <div class="login-link">
+            <a href="login.html">Sign in to your account</a>
+        </div>
+
+        <div class="back-home">
+            <a href="index.html">← Back to Home</a>
         </div>
     </div>
 
-    <script src="js/auth.js"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const registerBtn = document.getElementById('registerBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            // Clear previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            // Validate passwords match
+            const password = formData.get('password');
+            const confirmPassword = formData.get('confirmPassword');
+            
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Passwords do not match.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Disable button and show loading
+            registerBtn.disabled = true;
+            registerBtn.textContent = 'Creating Account...';
+
+            try {
+                const response = await fetch('http://localhost:8080/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        firstName: formData.get('firstName'),
+                        lastName: formData.get('lastName'),
+                        email: formData.get('email'),
+                        phone: formData.get('phone'),
+                        city: formData.get('city'),
+                        userType: formData.get('userType'),
+                        password: password
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Show success message
+                    successMessage.textContent = 'Account created successfully! Redirecting to login...';
+                    successMessage.style.display = 'block';
+                    
+                    // Redirect to login page
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    const errorData = await response.json();
+                    errorMessage.textContent = errorData.message || 'Registration failed. Please try again.';
+                    errorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                errorMessage.textContent = 'Network error. Please check your connection and try again.';
+                errorMessage.style.display = 'block';
+            } finally {
+                // Re-enable button
+                registerBtn.disabled = false;
+                registerBtn.textContent = 'Create Account';
+            }
+        });
+    </script>
 </body>
 </html> 

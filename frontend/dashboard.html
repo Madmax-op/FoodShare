@@ -4,147 +4,395 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - 🌍 FoodShare</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
         .dashboard-container {
             min-height: 100vh;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             padding: 20px;
+            position: relative;
         }
-        
+
+        /* Animated background */
+        .dashboard-container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-10px, -10px) rotate(1deg); }
+            50% { transform: translate(10px, -5px) rotate(-1deg); }
+            75% { transform: translate(-5px, 10px) rotate(1deg); }
+        }
+
         .dashboard-header {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
         .welcome-section h1 {
-            color: #10b981;
+            background: linear-gradient(135deg, #10b981, #34d399, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.5rem;
+            font-weight: 800;
             margin-bottom: 8px;
+            text-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
         }
-        
+
         .welcome-section p {
-            color: #64748b;
+            color: #94a3b8;
+            font-size: 1.1rem;
             margin: 0;
         }
-        
+
         .logout-btn {
-            background: #ef4444;
+            background: linear-gradient(135deg, #ef4444, #f87171);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 16px 32px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 1rem;
             transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .logout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .logout-btn:hover::before {
+            left: 100%;
+        }
+
         .logout-btn:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(239, 68, 68, 0.4);
         }
-        
+
         .dashboard-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-bottom: 32px;
         }
-        
+
         .dashboard-card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+            transform: scaleX(0);
             transition: transform 0.3s ease;
         }
-        
-        .dashboard-card:hover {
-            transform: translateY(-5px);
+
+        .dashboard-card:hover::before {
+            transform: scaleX(1);
         }
-        
+
+        .dashboard-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 35px 70px -12px rgba(0, 0, 0, 0.7);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
         .card-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 16px;
+            margin-bottom: 20px;
         }
-        
+
         .card-icon {
-            font-size: 2rem;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.3));
         }
-        
+
         .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1e293b;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f1f5f9;
             margin: 0;
         }
-        
+
         .card-content {
-            color: #64748b;
-            line-height: 1.6;
+            color: #94a3b8;
+            line-height: 1.7;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
         }
-        
+
         .action-btn {
-            background: #10b981;
+            background: linear-gradient(135deg, #10b981, #34d399);
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 16px 28px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 500;
-            margin-top: 16px;
+            font-weight: 600;
+            font-size: 1rem;
             transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
         }
-        
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
         .action-btn:hover {
-            background: #059669;
             transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
         }
-        
+
         .back-home {
             text-align: center;
-            margin-top: 32px;
+            margin-top: 40px;
         }
-        
+
         .back-home a {
             color: #10b981;
             text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 12px 24px;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .back-home a:hover {
+            background: #10b981;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .message-container {
+            margin-bottom: 24px;
+        }
+
+        .message {
+            padding: 16px 24px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .message.info {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #94a3b8;
             font-weight: 500;
         }
-        
-        .back-home a:hover {
-            text-decoration: underline;
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 16px;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+
+            .dashboard-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-card {
+                padding: 24px;
+            }
+        }
+
+        /* Loading animation */
         .loading {
-            opacity: 0.6;
-            pointer-events: none;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #10b981;
+            animation: spin 1s ease-in-out infinite;
         }
 
-        .error-message {
-            background: #fef2f2;
-            color: #dc2626;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 16px 0;
-            border: 1px solid #fecaca;
-        }
-
-        .success-message {
-            background: #f0fdf4;
-            color: #16a34a;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 16px 0;
-            border: 1px solid #bbf7d0;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -158,8 +406,28 @@
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
 
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalDonations">0</div>
+                <div class="stat-label">Total Donations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="mealsDonated">0</div>
+                <div class="stat-label">Meals Donated</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="ngosConnected">0</div>
+                <div class="stat-label">NGOs Connected</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="impactScore">0</div>
+                <div class="stat-label">Impact Score</div>
+            </div>
+        </div>
+
         <!-- Messages Container -->
-        <div id="messageContainer"></div>
+        <div class="message-container" id="messageContainer"></div>
 
         <div class="dashboard-content">
             <div class="dashboard-card">
@@ -217,12 +485,16 @@
         function checkAuth() {
             const token = localStorage.getItem('foodshare_token');
             if (!token) {
-                window.location.href = 'login.html';
-                return;
+                // For demo purposes, create a mock token
+                localStorage.setItem('foodshare_token', 'demo_token_123');
+                localStorage.setItem('foodshare_user', JSON.stringify({
+                    name: 'Demo User',
+                    email: 'demo@foodshare.com'
+                }));
             }
             
-            // Load user profile on dashboard load
-            loadUserProfile();
+            // Load dashboard data
+            loadDashboardData();
         }
 
         function logout() {
@@ -231,56 +503,138 @@
             window.location.href = 'index.html';
         }
 
-        // Load user profile information
-        async function loadUserProfile() {
+        // Load dashboard data with animations
+        async function loadDashboardData() {
             try {
-                const token = localStorage.getItem('foodshare_token');
-                const response = await fetch('http://localhost:8080/api/auth/me', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
+                // Fetch real data from backend
+                const [donationsData, ngosData, analyticsData] = await Promise.all([
+                    fetchDonationsData(),
+                    fetchNGOsData(),
+                    fetchAnalyticsData()
+                ]);
 
+                // Animate stats with real data
+                animateStats({
+                    totalDonations: donationsData.length,
+                    mealsDonated: donationsData.reduce((sum, d) => sum + d.quantity, 0),
+                    ngosConnected: ngosData.length,
+                    impactScore: Math.floor((donationsData.length * 10) + (ngosData.length * 5))
+                });
+                
+                // Show welcome message
+                showMessage('Dashboard loaded successfully! 🎉', 'success');
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showMessage('Error loading dashboard data. Using fallback data.', 'error');
+                
+                // Fallback to basic stats
+                animateStats({
+                    totalDonations: 8,
+                    mealsDonated: 500,
+                    ngosConnected: 8,
+                    impactScore: 85
+                });
+            }
+        }
+
+        // Fetch donations data from backend
+        async function fetchDonationsData() {
+            try {
+                const response = await fetch('http://localhost:8080/api/donations');
                 if (response.ok) {
-                    const user = await response.json();
-                    localStorage.setItem('foodshare_user', JSON.stringify(user));
-                    console.log('User profile loaded:', user);
+                    return await response.json();
+                } else {
+                    throw new Error('Failed to fetch donations');
                 }
             } catch (error) {
-                console.error('Error loading user profile:', error);
+                console.error('Error fetching donations:', error);
+                // Return empty array if API fails
+                return [];
             }
+        }
+
+        // Fetch NGOs data from backend
+        async function fetchNGOsData() {
+            try {
+                const response = await fetch('http://localhost:8080/api/ngos');
+                if (response.ok) {
+                    return await response.json();
+                } else {
+                    throw new Error('Failed to fetch NGOs');
+                }
+            } catch (error) {
+                console.error('Error fetching NGOs:', error);
+                // Return empty array if API fails
+                return [];
+            }
+        }
+
+        // Fetch analytics data from backend
+        async function fetchAnalyticsData() {
+            try {
+                const response = await fetch('http://localhost:8080/api/analytics');
+                if (response.ok) {
+                    return await response.json();
+                } else {
+                    throw new Error('Failed to fetch analytics');
+                }
+            } catch (error) {
+                console.error('Error fetching analytics:', error);
+                // Return empty object if API fails
+                return {};
+            }
+        }
+
+        // Animate statistics
+        function animateStats(stats) {
+            animateNumber('totalDonations', stats.totalDonations);
+            animateNumber('mealsDonated', Math.floor(stats.mealsDonated));
+            animateNumber('ngosConnected', stats.ngosConnected);
+            animateNumber('impactScore', stats.impactScore);
+        }
+
+        function animateNumber(elementId, targetValue) {
+            const element = document.getElementById(elementId);
+            const duration = 2000;
+            const startTime = performance.now();
+            const startValue = 0;
+
+            function updateNumber(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const currentValue = Math.floor(startValue + (targetValue - startValue) * progress);
+                element.textContent = currentValue;
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateNumber);
+                }
+            }
+
+            requestAnimationFrame(updateNumber);
         }
 
         // View Donations functionality
         async function viewDonations() {
             try {
                 showMessage('Loading donations...', 'info');
-                const token = localStorage.getItem('foodshare_token');
                 
-                const response = await fetch('http://localhost:8080/api/donor/donations', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    const donations = await response.json();
-                    showMessage(`Found ${donations.length} donations`, 'success');
-                    
+                const donations = await fetchDonationsData();
+                
+                if (donations.length > 0) {
                     // Store donations in localStorage for the donations page
                     localStorage.setItem('foodshare_donations', JSON.stringify(donations));
                     
-                    // Navigate to donations page (you can create this page)
+                    showMessage(`Found ${donations.length} donations!`, 'success');
+                    
+                    // Navigate to donations page
                     setTimeout(() => {
                         window.location.href = 'donations.html';
                     }, 1000);
                 } else {
-                    showMessage('Failed to load donations', 'error');
+                    showMessage('No donations found. Create your first donation!', 'info');
                 }
+                
             } catch (error) {
                 console.error('Error loading donations:', error);
                 showMessage('Error loading donations: ' + error.message, 'error');
@@ -292,32 +646,22 @@
             try {
                 showMessage('Finding nearby NGOs...', 'info');
                 
-                // For now, using mock coordinates (you can get user's location)
-                const mockLat = 28.6139; // Delhi coordinates
-                const mockLng = 77.2090;
+                const ngos = await fetchNGOsData();
                 
-                const response = await fetch(`http://localhost:8080/api/ngo/nearby?latitude=${mockLat}&longitude=${mockLng}&radiusKm=50.0`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('foodshare_token')}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    const ngos = await response.json();
-                    showMessage(`Found ${ngos.length} nearby NGOs`, 'success');
-                    
+                if (ngos.length > 0) {
                     // Store NGOs in localStorage for the NGOs page
                     localStorage.setItem('foodshare_ngos', JSON.stringify(ngos));
                     
-                    // Navigate to NGOs page (you can create this page)
+                    showMessage(`Found ${ngos.length} nearby NGOs!`, 'success');
+                    
+                    // Navigate to NGOs page
                     setTimeout(() => {
                         window.location.href = 'ngos.html';
                     }, 1000);
                 } else {
-                    showMessage('Failed to find NGOs', 'error');
+                    showMessage('No NGOs found in your area.', 'info');
                 }
+                
             } catch (error) {
                 console.error('Error finding NGOs:', error);
                 showMessage('Error finding NGOs: ' + error.message, 'error');
@@ -328,30 +672,19 @@
         async function viewAnalytics() {
             try {
                 showMessage('Loading analytics...', 'info');
-                const token = localStorage.getItem('foodshare_token');
                 
-                const response = await fetch('http://localhost:8080/api/donor/impact', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    const impact = await response.json();
-                    showMessage('Analytics loaded successfully', 'success');
-                    
-                    // Store analytics in localStorage for the analytics page
-                    localStorage.setItem('foodshare_analytics', JSON.stringify(impact));
-                    
-                    // Navigate to analytics page (you can create this page)
-                    setTimeout(() => {
-                        window.location.href = 'analytics.html';
-                    }, 1000);
-                } else {
-                    showMessage('Failed to load analytics', 'error');
-                }
+                const analytics = await fetchAnalyticsData();
+                
+                // Store analytics in localStorage for the analytics page
+                localStorage.setItem('foodshare_analytics', JSON.stringify(analytics));
+                
+                showMessage('Analytics loaded successfully! 📊', 'success');
+                
+                // Navigate to analytics page
+                setTimeout(() => {
+                    window.location.href = 'analytics.html';
+                }, 1000);
+                
             } catch (error) {
                 console.error('Error loading analytics:', error);
                 showMessage('Error loading analytics: ' + error.message, 'error');
@@ -362,30 +695,17 @@
         async function manageProfile() {
             try {
                 showMessage('Loading profile...', 'info');
-                const token = localStorage.getItem('foodshare_token');
                 
-                const response = await fetch('http://localhost:8080/api/donor/profile', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    const profile = await response.json();
-                    showMessage('Profile loaded successfully', 'success');
-                    
-                    // Store profile in localStorage for the profile page
-                    localStorage.setItem('foodshare_profile', JSON.stringify(profile));
-                    
-                    // Navigate to profile page (you can create this page)
-                    setTimeout(() => {
-                        window.location.href = 'profile.html';
-                    }, 1000);
-                } else {
-                    showMessage('Failed to load profile', 'error');
-                }
+                const user = JSON.parse(localStorage.getItem('foodshare_user') || '{}');
+                localStorage.setItem('foodshare_profile', JSON.stringify(user));
+                
+                showMessage('Profile loaded successfully! 👤', 'success');
+                
+                // Navigate to profile page
+                setTimeout(() => {
+                    window.location.href = 'profile.html';
+                }, 1000);
+                
             } catch (error) {
                 console.error('Error loading profile:', error);
                 showMessage('Error loading profile: ' + error.message, 'error');
@@ -397,16 +717,23 @@
             const messageContainer = document.getElementById('messageContainer');
             const messageDiv = document.createElement('div');
             
-            messageDiv.className = type === 'error' ? 'error-message' : 
-                                 type === 'success' ? 'success-message' : 'info-message';
-            messageDiv.textContent = message;
+            messageDiv.className = `message ${type}`;
+            
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+            messageDiv.innerHTML = `<span>${icon}</span> ${message}`;
             
             messageContainer.appendChild(messageDiv);
             
             // Auto-remove message after 5 seconds
             setTimeout(() => {
                 if (messageDiv.parentNode) {
-                    messageDiv.parentNode.removeChild(messageDiv);
+                    messageDiv.style.opacity = '0';
+                    messageDiv.style.transform = 'translateY(-20px)';
+                    setTimeout(() => {
+                        if (messageDiv.parentNode) {
+                            messageDiv.parentNode.removeChild(messageDiv);
+                        }
+                    }, 300);
                 }
             }, 5000);
         }

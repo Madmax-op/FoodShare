@@ -90,9 +90,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="donor-details">
                     <h4>${entry.donorName}</h4>
                     <p class="donor-category">${entry.donorCategory}</p>
+                    <div class="donor-stats">
+                        <span class="stat">📍 ${entry.location}</span>
+                        <span class="stat">📅 ${entry.donations} donations</span>
+                        <span class="stat">🌱 ${entry.impact}</span>
+                    </div>
                 </div>
-                <div class="donation-amount">${entry.donationAmount}</div>
-                <div class="donation-value">${entry.donationValue}</div>
+                <div class="donation-stats">
+                    <div class="donation-amount">${entry.donationAmount}</div>
+                    <div class="donation-value">${entry.donationValue}</div>
+                </div>
             `;
             
             gridElement.appendChild(leaderboardItem);
@@ -106,25 +113,34 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadSampleData(period) {
         const sampleData = {
             monthly: [
-                { donorName: "Delhi University Hostel #5", donorCategory: "Student Hostel", donationAmount: "2,450 meals", donationValue: "₹24,500" },
-                { donorName: "Spice Garden Restaurant", donorCategory: "Restaurant", donationAmount: "1,890 meals", donationValue: "₹18,900" },
-                { donorName: "IIT Delhi Mess", donorCategory: "Educational Institution", donationAmount: "1,650 meals", donationValue: "₹16,500" },
-                { donorName: "Radisson Blu Hotel", donorCategory: "Hotel", donationAmount: "1,420 meals", donationValue: "₹14,200" },
-                { donorName: "Vivek Raj Sahay", donorCategory: "Individual Donor", donationAmount: "1,200 meals", donationValue: "₹12,000" }
+                { donorName: "Delhi University Hostel #5", donorCategory: "Student Hostel", donationAmount: "2,450 meals", donationValue: "₹24,500", location: "Delhi", donations: "15", impact: "1.2 tons saved" },
+                { donorName: "Spice Garden Restaurant", donorCategory: "Restaurant", donationAmount: "1,890 meals", donationValue: "₹18,900", location: "Mumbai", donations: "12", impact: "0.9 tons saved" },
+                { donorName: "IIT Delhi Mess", donorCategory: "Educational Institution", donationAmount: "1,650 meals", donationValue: "₹16,500", location: "Delhi", donations: "18", impact: "0.8 tons saved" },
+                { donorName: "Radisson Blu Hotel", donorCategory: "Hotel", donationAmount: "1,420 meals", donationValue: "₹14,200", location: "Bangalore", donations: "10", impact: "0.7 tons saved" },
+                { donorName: "Vivek Raj Sahay", donorCategory: "Individual Donor", donationAmount: "1,200 meals", donationValue: "₹12,000", location: "Pune", donations: "8", impact: "0.6 tons saved" },
+                { donorName: "Taj Palace Hotel", donorCategory: "Hotel", donationAmount: "1,150 meals", donationValue: "₹11,500", location: "Delhi", donations: "9", impact: "0.6 tons saved" },
+                { donorName: "Amity University Canteen", donorCategory: "Educational Institution", donationAmount: "980 meals", donationValue: "₹9,800", location: "Noida", donations: "7", impact: "0.5 tons saved" },
+                { donorName: "Pizza Hut Express", donorCategory: "Restaurant", donationAmount: "850 meals", donationValue: "₹8,500", location: "Chennai", donations: "6", impact: "0.4 tons saved" }
             ],
             yearly: [
-                { donorName: "IIT Delhi Mess", donorCategory: "Educational Institution", donationAmount: "18,750 meals", donationValue: "₹187,500" },
-                { donorName: "Delhi University Hostel #5", donorCategory: "Student Hostel", donationAmount: "16,200 meals", donationValue: "₹162,000" },
-                { donorName: "Spice Garden Restaurant", donorCategory: "Restaurant", donationAmount: "14,800 meals", donationValue: "₹148,000" },
-                { donorName: "Radisson Blu Hotel", donorCategory: "Hotel", donationAmount: "12,600 meals", donationValue: "₹126,000" },
-                { donorName: "Vivek Raj Sahay", donorCategory: "Individual Donor", donationAmount: "11,400 meals", donationValue: "₹114,000" }
+                { donorName: "IIT Delhi Mess", donorCategory: "Educational Institution", donationAmount: "18,750 meals", donationValue: "₹187,500", location: "Delhi", donations: "156", impact: "9.4 tons saved" },
+                { donorName: "Delhi University Hostel #5", donorCategory: "Student Hostel", donationAmount: "16,200 meals", donationValue: "₹162,000", location: "Delhi", donations: "142", impact: "8.1 tons saved" },
+                { donorName: "Spice Garden Restaurant", donorCategory: "Restaurant", donationAmount: "14,800 meals", donationValue: "₹148,000", location: "Mumbai", donations: "128", impact: "7.4 tons saved" },
+                { donorName: "Radisson Blu Hotel", donorCategory: "Hotel", donationAmount: "12,600 meals", donationValue: "₹126,000", location: "Bangalore", donations: "98", impact: "6.3 tons saved" },
+                { donorName: "Vivek Raj Sahay", donorCategory: "Individual Donor", donationAmount: "11,400 meals", donationValue: "₹114,000", location: "Pune", donations: "95", impact: "5.7 tons saved" },
+                { donorName: "Taj Palace Hotel", donorCategory: "Hotel", donationAmount: "10,800 meals", donationValue: "₹108,000", location: "Delhi", donations: "89", impact: "5.4 tons saved" },
+                { donorName: "Amity University Canteen", donorCategory: "Educational Institution", donationAmount: "9,600 meals", donationValue: "₹96,000", location: "Noida", donations: "78", impact: "4.8 tons saved" },
+                { donorName: "Pizza Hut Express", donorCategory: "Restaurant", donationAmount: "8,900 meals", donationValue: "₹89,000", location: "Chennai", donations: "72", impact: "4.5 tons saved" }
             ],
             'all-time': [
-                { donorName: "IIT Delhi Mess", donorCategory: "Educational Institution", donationAmount: "156,800 meals", donationValue: "₹1,568,000" },
-                { donorName: "Delhi University Hostel #5", donorCategory: "Student Hostel", donationAmount: "142,300 meals", donationValue: "₹1,423,000" },
-                { donorName: "Spice Garden Restaurant", donorCategory: "Restaurant", donationAmount: "128,900 meals", donationValue: "₹1,289,000" },
-                { donorName: "Radisson Blu Hotel", donorCategory: "Hotel", donationAmount: "115,600 meals", donationValue: "₹1,156,000" },
-                { donorName: "Vivek Raj Sahay", donorCategory: "Individual Donor", donationAmount: "98,400 meals", donationValue: "₹984,000" }
+                { donorName: "IIT Delhi Mess", donorCategory: "Educational Institution", donationAmount: "156,800 meals", donationValue: "₹1,568,000", location: "Delhi", donations: "1,245", impact: "78.4 tons saved" },
+                { donorName: "Delhi University Hostel #5", donorCategory: "Student Hostel", donationAmount: "142,300 meals", donationValue: "₹1,423,000", location: "Delhi", donations: "1,156", impact: "71.2 tons saved" },
+                { donorName: "Spice Garden Restaurant", donorCategory: "Restaurant", donationAmount: "128,900 meals", donationValue: "₹1,289,000", location: "Mumbai", donations: "1,089", impact: "64.5 tons saved" },
+                { donorName: "Radisson Blu Hotel", donorCategory: "Hotel", donationAmount: "115,600 meals", donationValue: "₹1,156,000", location: "Bangalore", donations: "987", impact: "57.8 tons saved" },
+                { donorName: "Vivek Raj Sahay", donorCategory: "Individual Donor", donationAmount: "98,400 meals", donationValue: "₹984,000", location: "Pune", donations: "856", impact: "49.2 tons saved" },
+                { donorName: "Taj Palace Hotel", donorCategory: "Hotel", donationAmount: "92,300 meals", donationValue: "₹923,000", location: "Delhi", donations: "789", impact: "46.2 tons saved" },
+                { donorName: "Amity University Canteen", donorCategory: "Educational Institution", donationAmount: "87,600 meals", donationValue: "₹876,000", location: "Noida", donations: "745", impact: "43.8 tons saved" },
+                { donorName: "Pizza Hut Express", donorCategory: "Restaurant", donationAmount: "76,800 meals", donationValue: "₹768,000", location: "Chennai", donations: "678", impact: "38.4 tons saved" }
             ]
         };
         

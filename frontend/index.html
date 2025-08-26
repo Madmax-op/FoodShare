@@ -3,9 +3,828 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌍 Food Donation Management System</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>🌍 FoodShare - Connecting Surplus Food with Those in Need</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #e2e8f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Animated background */
+        .container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-10px, -10px) rotate(1deg); }
+            50% { transform: translate(10px, -5px) rotate(-1deg); }
+            75% { transform: translate(-5px, 10px) rotate(1deg); }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.5rem; }
+        h4 { font-size: 1.25rem; }
+
+        p {
+            margin-bottom: 1rem;
+            color: #94a3b8;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            height: 44px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+            border-color: #10b981;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(148, 163, 184, 0.1);
+            color: #94a3b8;
+            border-color: rgba(148, 163, 184, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(148, 163, 184, 0.2);
+            color: #f1f5f9;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #10b981;
+            border-color: #10b981;
+        }
+
+        .btn-outline:hover {
+            background: #10b981;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 1.1rem;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            gap: 2rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .logo h1 {
+            background: linear-gradient(135deg, #10b981, #34d399, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+
+        .logo p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin: 0 auto;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #94a3b8;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            display: inline-block;
+            padding: 0.5rem 0;
+            line-height: 1;
+        }
+
+        .nav-link:hover {
+            color: #10b981;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            padding: 4rem 2rem;
+            min-height: 80vh;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #10b981, #34d399, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-visual {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            font-size: 4rem;
+        }
+
+        .arrow {
+            font-size: 3rem;
+            color: #10b981;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            padding: 4rem 2rem;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            margin: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        /* Sections */
+        section {
+            padding: 4rem 2rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #f1f5f9;
+        }
+
+        /* How It Works */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .step-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .step h3 {
+            color: #f1f5f9;
+            margin-bottom: 1rem;
+        }
+
+        /* Features */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: #f1f5f9;
+            margin-bottom: 1rem;
+        }
+
+        /* About Section */
+        .about {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            padding: 4rem 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            margin: 2rem;
+        }
+
+        .about p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .mission-values {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .value {
+            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .value h4 {
+            color: #10b981;
+            margin-bottom: 0.5rem;
+        }
+
+        /* CTA Section */
+        .cta {
+            text-align: center;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 16px;
+            margin: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.3);
+        }
+
+        .cta h2 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            color: #e0f2fe;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta .btn-outline {
+            color: white;
+            border-color: white;
+        }
+
+        .cta .btn-outline:hover {
+            background: white;
+            color: #10b981;
+        }
+
+        /* Donor of the Month Section */
+        .donor-of-month {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            padding: 4rem 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            margin: 2rem;
+            text-align: center;
+        }
+
+        .donor-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-radius: 20px;
+            border: 3px solid #f59e0b;
+        }
+
+        .donor-avatar {
+            font-size: 4rem;
+            background: #f59e0b;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .donor-info h3 {
+            color: #92400e;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .donor-type {
+            color: #d97706;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .donor-achievement {
+            color: #78350f;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .donor-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Leaderboard Section */
+        .leaderboard {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            padding: 4rem 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            margin: 2rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .leaderboard-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            background: rgba(30, 41, 59, 0.8);
+            color: #94a3b8;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab-btn.active,
+        .tab-btn:hover {
+            border-color: #10b981;
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .leaderboard-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .leaderboard-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            text-align: left;
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(148, 163, 184, 0.1);
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            min-height: 80px;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .leaderboard-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .leaderboard-item.rank-1 {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-color: #f59e0b;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .leaderboard-item.rank-2 {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            border-color: #6b7280;
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.2);
+        }
+
+        .leaderboard-item.rank-3 {
+            background: linear-gradient(135deg, #fef3c7, #fbbf24);
+            border-color: #d97706;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.2);
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .donor-details {
+            flex: 1;
+            margin: 0;
+        }
+
+        .donor-details h4 {
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            line-height: 1.3;
+        }
+
+        .donor-category {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .donation-amount {
+            color: #10b981;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            text-align: right;
+        }
+
+        .donation-value {
+            color: #059669;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-align: right;
+        }
+
+        .donation-stats {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.25rem;
+        }
+
+        .donor-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .donor-stats .stat {
+            font-size: 0.8rem;
+            color: #64748b;
+            background: #f1f5f9;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            color: white;
+            padding: 3rem 2rem 1rem;
+            margin-top: 4rem;
+            width: 100%;
+            box-sizing: border-box;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3,
+        .footer-section h4 {
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #10b981;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mission-values {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .donor-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .donor-stats {
+                justify-content: center;
+            }
+            
+            .leaderboard-tabs {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .btn-large {
+                padding: 14px 28px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step, .feature-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .step:nth-child(2) { animation-delay: 0.1s; }
+        .step:nth-child(3) { animation-delay: 0.2s; }
+        .step:nth-child(4) { animation-delay: 0.3s; }
+
+        .feature-card:nth-child(2) { animation-delay: 0.1s; }
+        .feature-card:nth-child(3) { animation-delay: 0.2s; }
+        .feature-card:nth-child(4) { animation-delay: 0.3s; }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -13,16 +832,17 @@
         <header class="header">
             <div class="logo">
                 <h1>🌍 FoodShare</h1>
-                <p>Connecting Surplus Food with Those in Need</p>
+                <p>Connecting surplus food with those in need</p>
             </div>
             <nav class="nav">
                 <a href="#about" class="nav-link">About</a>
                 <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#features" class="nav-link">Features</a>
                 <a href="#contact" class="nav-link">Contact</a>
             </nav>
             <div class="auth-buttons">
                 <a href="login.html" class="btn btn-secondary">Login</a>
-                <a href="register.html" class="btn btn-primary">Get Started</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
             </div>
         </header>
 
@@ -30,20 +850,19 @@
         <section class="hero">
             <div class="hero-content">
                 <h1 class="hero-title">End Food Waste, Feed Communities</h1>
-                <p class="hero-subtitle">
-                    Our AI-powered platform connects food donors with nearby NGOs in real-time, 
-                    ensuring surplus food reaches those who need it most.
-                </p>
+                <p class="hero-subtitle">Connect surplus food from restaurants, hotels, and individuals with NGOs and communities in need. Make a difference with every donation.</p>
                 <div class="hero-buttons">
-                    <a href="register.html" class="btn btn-primary btn-large">Start Donating</a>
-                    <a href="register-ngo.html" class="btn btn-outline btn-large">Join as NGO</a>
+                    <a href="register.html" class="btn btn-primary btn-large">Start Donating Today</a>
+                    <a href="#how-it-works" class="btn btn-outline btn-large">Learn More</a>
                 </div>
             </div>
             <div class="hero-image">
                 <div class="hero-visual">
-                    <div class="food-icon">🍽️</div>
-                    <div class="arrow">→</div>
-                    <div class="people-icon">👥</div>
+                    <span>🍽️</span>
+                    <span class="arrow">→</span>
+                    <span>🤝</span>
+                    <span class="arrow">→</span>
+                    <span>❤️</span>
                 </div>
             </div>
         </section>
@@ -51,85 +870,85 @@
         <!-- Stats Section -->
         <section class="stats">
             <div class="stat-item">
-                <div class="stat-number">1.3B</div>
-                <div class="stat-label">Tons of Food Wasted Annually</div>
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Meals Donated</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">800M</div>
-                <div class="stat-label">People Go Hungry Daily</div>
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Active Donors</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">95%</div>
-                <div class="stat-label">Reduction in Food Waste</div>
+                <div class="stat-number">100+</div>
+                <div class="stat-label">Partner NGOs</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">25+</div>
+                <div class="stat-label">Cities Served</div>
             </div>
         </section>
 
         <!-- How It Works -->
-        <section id="how-it-works" class="how-it-works">
-            <h2>How It Works</h2>
+        <section id="how-it-works">
+            <h2>How FoodShare Works</h2>
             <div class="steps">
                 <div class="step">
-                    <div class="step-icon">🔍</div>
-                    <h3>AI Prediction</h3>
-                    <p>Our ML model predicts surplus food amounts based on historical data and patterns.</p>
-                </div>
-                <div class="step">
-                    <div class="step-icon">📍</div>
-                    <h3>Location Matching</h3>
-                    <p>Find the nearest NGOs using GPS coordinates and real-time spatial queries.</p>
-                </div>
-                <div class="step">
                     <div class="step-icon">📱</div>
-                    <h3>Instant Connection</h3>
-                    <p>Connect donors with NGOs instantly through our secure platform.</p>
+                    <h3>1. Register & List</h3>
+                    <p>Sign up as a donor and list your surplus food with details like quantity, expiry time, and pickup location.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">🔍</div>
+                    <h3>2. Smart Matching</h3>
+                    <p>Our AI-powered system matches your donation with nearby NGOs based on location, food type, and requirements.</p>
                 </div>
                 <div class="step">
                     <div class="step-icon">🚚</div>
-                    <h3>Food Delivery</h3>
-                    <p>Coordinate pickup and delivery to ensure food reaches those in need.</p>
+                    <h3>3. Coordinate Pickup</h3>
+                    <p>Coordinate pickup times and locations with the matched NGO through our secure messaging system.</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">✅</div>
+                    <h3>4. Track Impact</h3>
+                    <p>Monitor your donation's journey and see the real impact you're making in your community.</p>
                 </div>
             </div>
         </section>
 
         <!-- Features -->
-        <section class="features">
-            <h2>Key Features</h2>
+        <section id="features">
+            <h2>Why Choose FoodShare?</h2>
             <div class="feature-grid">
                 <div class="feature-card">
                     <div class="feature-icon">🤖</div>
-                    <h3>AI-Powered Predictions</h3>
-                    <p>Machine learning algorithms predict food surplus with high accuracy.</p>
+                    <h3>AI-Powered Matching</h3>
+                    <p>Advanced algorithms ensure optimal matching between donors and recipients for maximum efficiency.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🌐</div>
-                    <h3>Real-time Matching</h3>
-                    <p>Instant connection between donors and nearby NGOs.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📱</div>
-                    <h3>Offline Support</h3>
-                    <p>SMS/USSD fallback for low-internet regions.</p>
+                    <div class="feature-icon">📊</div>
+                    <h3>Real-time Analytics</h3>
+                    <p>Track your impact with detailed analytics and see how your donations are making a difference.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔒</div>
-                    <h3>Secure Platform</h3>
-                    <p>JWT authentication and encrypted data transmission.</p>
+                    <h3>Secure & Verified</h3>
+                    <p>All NGOs and donors are verified to ensure safe and reliable food distribution.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌱</div>
+                    <h3>Environmental Impact</h3>
+                    <p>Reduce food waste and carbon footprint while helping communities in need.</p>
                 </div>
             </div>
         </section>
 
         <!-- About Section -->
         <section id="about" class="about">
-            <h2>About Our Mission</h2>
-            <p>
-                We're committed to solving one of the world's most pressing issues: food waste and hunger. 
-                Our platform leverages cutting-edge technology to create a sustainable food ecosystem where 
-                surplus food is efficiently distributed to those who need it most.
-            </p>
+            <h2>About FoodShare</h2>
+            <p>FoodShare is a revolutionary platform that connects food donors with NGOs and communities in need. Our mission is to reduce food waste while ensuring that no one goes hungry. Through technology and community collaboration, we're building a more sustainable and compassionate world.</p>
             <div class="mission-values">
                 <div class="value">
-                    <h4>🌱 Sustainability</h4>
-                    <p>Reduce environmental impact of food waste</p>
+                    <h4>🌍 Sustainability</h4>
+                    <p>Reduce food waste and environmental impact</p>
                 </div>
                 <div class="value">
                     <h4>🤝 Community</h4>

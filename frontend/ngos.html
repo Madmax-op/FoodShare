@@ -3,679 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nearby NGOs - 🌍 FoodShare</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>NGOs - 🌍 FoodShare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .ngos-container {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            padding: 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .page-header {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-10px, -10px) rotate(1deg); }
+            50% { transform: translate(10px, -5px) rotate(-1deg); }
+            75% { transform: translate(-5px, 10px) rotate(1deg); }
+        }
+
+        .header {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
-        .page-title h1 {
-            color: #10b981;
-            margin-bottom: 8px;
+
+        .header h1 {
+            background: linear-gradient(135deg, #10b981, #34d399, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.5rem;
+            font-weight: 800;
         }
-        
-        .page-title p {
-            color: #64748b;
-            margin: 0;
-        }
-        
+
         .back-btn {
-            background: #6b7280;
+            background: linear-gradient(135deg, #10b981, #34d399);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 16px 32px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 1rem;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
         }
-        
+
         .back-btn:hover {
-            background: #4b5563;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
         }
-        
-        .ngos-content {
-            background: white;
-            border-radius: 16px;
+
+        .ngos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .ngo-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 20px;
             padding: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .ngo-item {
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .ngo-item:hover {
-            border-color: #10b981;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+
+        .ngo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
-        
+
+        .ngo-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .ngo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
         .ngo-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
+            align-items: flex-start;
+            margin-bottom: 16px;
         }
-        
+
         .ngo-name {
             font-size: 1.25rem;
-            font-weight: 600;
-            color: #1f2937;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 8px;
         }
-        
-        .ngo-status {
-            padding: 4px 12px;
-            border-radius: 20px;
+
+        .ngo-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            padding: 4px 8px;
+            border-radius: 12px;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 600;
         }
-        
-        .status-accepting {
-            background: #d1fae5;
-            color: #059669;
-        }
-        
-        .status-full {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-        
+
         .ngo-details {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 16px;
             margin-bottom: 16px;
         }
-        
+
         .detail-item {
             display: flex;
             flex-direction: column;
+            gap: 4px;
         }
-        
+
         .detail-label {
             font-size: 0.875rem;
-            color: #6b7280;
-            margin-bottom: 4px;
-        }
-        
-        .detail-value {
+            color: #94a3b8;
             font-weight: 500;
-            color: #1f2937;
         }
-        
+
+        .detail-value {
+            font-size: 1rem;
+            color: #f1f5f9;
+            font-weight: 600;
+        }
+
         .ngo-actions {
             display: flex;
             gap: 12px;
-            flex-wrap: wrap;
         }
-        
+
         .action-btn {
-            padding: 8px 16px;
+            flex: 1;
+            padding: 12px 20px;
             border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 0.875rem;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary {
-            background: #10b981;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #059669;
-        }
-        
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background: #4b5563;
-        }
-        
-        .no-ngos {
-            text-align: center;
-            padding: 48px;
-            color: #6b7280;
-        }
-        
-        .no-ngos h3 {
-            margin-bottom: 16px;
-            color: #374151;
-        }
-        
-        .search-section {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-        
-        .search-form {
-            display: flex;
-            gap: 16px;
-            align-items: end;
-            flex-wrap: wrap;
-        }
-        
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            min-width: 200px;
-        }
-        
-        .form-group label {
-            font-size: 0.875rem;
-            color: #374151;
-            margin-bottom: 4px;
-            font-weight: 500;
-        }
-        
-        .form-group input {
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.875rem;
-        }
-        
-        .search-btn {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .search-btn:hover {
-            background: #059669;
-        }
-
-        .stats-section {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 16px;
-            background: white;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
             font-weight: 600;
-            color: #10b981;
-            margin-bottom: 4px;
-        }
-
-        .stat-label {
+            cursor: pointer;
+            transition: all 0.3s ease;
             font-size: 0.875rem;
-            color: #6b7280;
         }
 
-        .connection-status {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            margin-left: 8px;
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
         }
 
-        .status-connected {
-            background: #d1fae5;
-            color: #059669;
+        .btn-secondary {
+            background: rgba(148, 163, 184, 0.1);
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.2);
         }
 
-        .status-pending {
-            background: #fef3c7;
-            color: #d97706;
+        .action-btn:hover {
+            transform: translateY(-2px);
         }
 
-        .status-new {
-            background: #dbeafe;
-            color: #2563eb;
+        .btn-primary:hover {
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(148, 163, 184, 0.2);
+            color: #f1f5f9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: #f1f5f9;
+            margin-bottom: 16px;
+        }
+
+        .empty-state p {
+            color: #94a3b8;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .ngos-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ngo-details {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="ngos-container">
-        <div class="page-header">
-            <div class="page-title">
-                <h1>🤝 Nearby NGOs</h1>
-                <p>Find and connect with NGOs in your area</p>
-            </div>
+    <div class="container">
+        <div class="header">
+            <h1>🤝 Nearby NGOs</h1>
             <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
         </div>
 
-        <div class="ngos-content">
-            <div class="stats-section">
-                <h3>📊 Your NGO Connections</h3>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-value" id="totalNGOs">0</div>
-                        <div class="stat-label">Total NGOs Found</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="connectedNGOs">0</div>
-                        <div class="stat-label">Connected</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="pendingConnections">0</div>
-                        <div class="stat-label">Pending</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="totalMeals">0</div>
-                        <div class="stat-label">Meals Delivered</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="search-section">
-                <h3>🔍 Search NGOs</h3>
-                <form class="search-form" onsubmit="searchNGOs(event)">
-                    <div class="form-group">
-                        <label for="latitude">Latitude</label>
-                        <input type="number" id="latitude" step="any" value="28.6139" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="longitude">Longitude</label>
-                        <input type="number" id="longitude" step="any" value="77.2090" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="radius">Radius (km)</label>
-                        <input type="number" id="radius" value="50" min="1" max="100" required>
-                    </div>
-                    <button type="submit" class="search-btn">🔍 Search</button>
-                </form>
-            </div>
-
-            <div id="ngosList">
-                <!-- NGOs will be loaded here -->
-            </div>
+        <div id="ngosContainer">
+            <!-- NGOs will be loaded here -->
         </div>
     </div>
 
     <script>
-        // Dummy data for NGOs
-        const dummyNGOs = [
-            {
-                id: 1,
-                name: "Food for All Foundation",
-                address: "123 Community Lane, New Delhi, Delhi 110001",
-                phone: "+91-11-2345-6789",
-                email: "contact@foodforall.org",
-                latitude: 28.6139,
-                longitude: 77.2090,
-                acceptsDonations: true,
-                foodTypesAccepted: "Grains, Vegetables, Fruits, Dairy",
-                operatingHours: "Mon-Sat: 9:00 AM - 6:00 PM",
-                distance: 2.3,
-                connectionStatus: "connected",
-                mealsDelivered: 156,
-                lastDonation: "2024-01-15",
-                rating: 4.8,
-                description: "Serving the community since 2010, we provide meals to underprivileged families and homeless individuals."
-            },
-            {
-                id: 2,
-                name: "Hope Kitchen Initiative",
-                address: "456 Service Road, Gurgaon, Haryana 122001",
-                phone: "+91-124-5678-9012",
-                email: "info@hopekitchen.org",
-                latitude: 28.4595,
-                longitude: 77.0266,
-                acceptsDonations: true,
-                foodTypesAccepted: "All food types",
-                operatingHours: "Daily: 8:00 AM - 8:00 PM",
-                distance: 8.7,
-                connectionStatus: "pending",
-                mealsDelivered: 89,
-                lastDonation: "2024-01-12",
-                rating: 4.6,
-                description: "Emergency food relief and community kitchen serving daily meals to those in need."
-            },
-            {
-                id: 3,
-                name: "Community Care Center",
-                address: "789 Welfare Street, Noida, UP 201301",
-                phone: "+91-120-3456-7890",
-                email: "help@communitycare.org",
-                latitude: 28.5355,
-                longitude: 77.3910,
-                acceptsDonations: false,
-                foodTypesAccepted: "Currently full",
-                operatingHours: "Mon-Fri: 10:00 AM - 4:00 PM",
-                distance: 15.2,
-                connectionStatus: "new",
-                mealsDelivered: 234,
-                lastDonation: "2024-01-10",
-                rating: 4.9,
-                description: "Comprehensive community support center providing food, education, and healthcare services."
-            },
-            {
-                id: 4,
-                name: "Green Earth Food Bank",
-                address: "321 Eco Park Road, Faridabad, Haryana 121001",
-                phone: "+91-129-2345-6789",
-                email: "donate@greenearth.org",
-                latitude: 28.4089,
-                longitude: 77.3178,
-                acceptsDonations: true,
-                foodTypesAccepted: "Organic, Fresh Produce",
-                operatingHours: "Tue-Sun: 7:00 AM - 7:00 PM",
-                distance: 22.8,
-                connectionStatus: "connected",
-                mealsDelivered: 312,
-                lastDonation: "2024-01-14",
-                rating: 4.7,
-                description: "Focusing on sustainable food practices and organic produce distribution to promote healthy eating."
-            },
-            {
-                id: 5,
-                name: "Youth Feeding Program",
-                address: "654 Student Colony, Ghaziabad, UP 201001",
-                phone: "+91-120-4567-8901",
-                email: "youth@feedingprogram.org",
-                latitude: 28.6692,
-                longitude: 77.4538,
-                acceptsDonations: true,
-                foodTypesAccepted: "Nutritious meals, Snacks",
-                operatingHours: "Mon-Sat: 8:00 AM - 5:00 PM",
-                distance: 18.5,
-                connectionStatus: "new",
-                mealsDelivered: 67,
-                lastDonation: "2024-01-08",
-                rating: 4.5,
-                description: "Dedicated to providing nutritious meals to school children and young adults in need."
-            },
-            {
-                id: 6,
-                name: "Senior Citizens Food Support",
-                address: "987 Elder Care Lane, Delhi 110024",
-                phone: "+91-11-3456-7890",
-                email: "seniors@foodsupport.org",
-                latitude: 28.7041,
-                longitude: 77.1025,
-                acceptsDonations: true,
-                foodTypesAccepted: "Soft foods, Pureed meals",
-                operatingHours: "Daily: 6:00 AM - 9:00 PM",
-                distance: 12.3,
-                connectionStatus: "connected",
-                mealsDelivered: 445,
-                lastDonation: "2024-01-16",
-                rating: 4.9,
-                description: "Specialized food support for elderly citizens with dietary restrictions and health needs."
-            }
-        ];
-
-        // Check authentication
-        function checkAuth() {
-            const token = localStorage.getItem('foodshare_token');
-            if (!token) {
-                window.location.href = 'login.html';
-                return;
-            }
-            loadNGOs();
-        }
-
-        // Load NGOs from localStorage or API
+        // Load NGOs from database via backend API
         async function loadNGOs() {
-            // Use dummy data for now
-            const ngos = dummyNGOs;
-            
-            if (ngos.length === 0) {
-                showNoNGOs();
-            } else {
-                displayNGOs(ngos);
-                updateStats(ngos);
-            }
-        }
-
-        // Search NGOs
-        async function searchNGOs(event) {
-            event.preventDefault();
-            
-            const latitude = document.getElementById('latitude').value;
-            const longitude = document.getElementById('longitude').value;
-            const radius = document.getElementById('radius').value;
-            
             try {
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                // Filter NGOs based on radius (simplified)
-                const filteredNGOs = dummyNGOs.filter(ngo => {
-                    const distance = calculateDistance(latitude, longitude, ngo.latitude, ngo.longitude);
-                    return distance <= radius;
-                });
-                
-                displayNGOs(filteredNGOs);
-                updateStats(filteredNGOs);
-                
-                if (filteredNGOs.length === 0) {
-                    showNoNGOs();
+                const response = await fetch('http://localhost:8080/api/ngos');
+                if (response.ok) {
+                    const ngos = await response.json();
+                    displayNGOs(ngos);
+                } else {
+                    throw new Error('Failed to fetch NGOs');
                 }
             } catch (error) {
-                console.error('Error searching NGOs:', error);
-                alert('Error searching NGOs: ' + error.message);
+                console.error('Error loading NGOs:', error);
+                showEmptyState('Error loading NGOs. Please try again later.');
             }
         }
 
-        // Calculate distance between two points (Haversine formula)
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Earth's radius in km
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                     Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
-        }
-
-        // Update statistics
-        function updateStats(ngos) {
-            const totalNGOs = ngos.length;
-            const connectedNGOs = ngos.filter(ngo => ngo.connectionStatus === 'connected').length;
-            const pendingConnections = ngos.filter(ngo => ngo.connectionStatus === 'pending').length;
-            const totalMeals = ngos.reduce((sum, ngo) => sum + ngo.mealsDelivered, 0);
-
-            document.getElementById('totalNGOs').textContent = totalNGOs;
-            document.getElementById('connectedNGOs').textContent = connectedNGOs;
-            document.getElementById('pendingConnections').textContent = pendingConnections;
-            document.getElementById('totalMeals').textContent = totalMeals;
-        }
-
-        // Display NGOs
         function displayNGOs(ngos) {
-            const ngosList = document.getElementById('ngosList');
-            ngosList.innerHTML = '';
+            const container = document.getElementById('ngosContainer');
 
             if (ngos.length === 0) {
-                showNoNGOs();
+                showEmptyState('No NGOs found in your area. Try expanding your search radius.');
                 return;
             }
 
-            ngos.forEach(ngo => {
-                const ngoElement = createNGOElement(ngo);
-                ngosList.appendChild(ngoElement);
-            });
-        }
-
-        // Create NGO element
-        function createNGOElement(ngo) {
-            const div = document.createElement('div');
-            div.className = 'ngo-item';
-            
-            const statusClass = ngo.acceptsDonations ? 'status-accepting' : 'status-full';
-            const statusText = ngo.acceptsDonations ? '✅ Accepting Donations' : '❌ Not Accepting';
-            const connectionStatusClass = `status-${ngo.connectionStatus}`;
-            const connectionStatusText = getConnectionStatusText(ngo.connectionStatus);
-            
-            div.innerHTML = `
-                <div class="ngo-header">
-                    <h3 class="ngo-name">${ngo.name}</h3>
-                    <div>
-                        <span class="ngo-status ${statusClass}">${statusText}</span>
-                        <span class="connection-status ${connectionStatusClass}">${connectionStatusText}</span>
-                    </div>
-                </div>
-                <div class="ngo-details">
-                    <div class="detail-item">
-                        <span class="detail-label">Address</span>
-                        <span class="detail-value">${ngo.address}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Phone</span>
-                        <span class="detail-value">${ngo.phone}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Email</span>
-                        <span class="detail-value">${ngo.email}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Distance</span>
-                        <span class="detail-value">${ngo.distance.toFixed(1)} km</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Food Types Accepted</span>
-                        <span class="detail-value">${ngo.foodTypesAccepted}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Operating Hours</span>
-                        <span class="detail-value">${ngo.operatingHours}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Meals Delivered</span>
-                        <span class="detail-value">${ngo.mealsDelivered}</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Rating</span>
-                        <span class="detail-value">⭐ ${ngo.rating}/5.0</span>
-                    </div>
-                </div>
-                <div class="ngo-actions">
-                    ${getActionButtons(ngo)}
+            container.innerHTML = `
+                <div class="ngos-grid">
+                    ${ngos.map(ngo => `
+                        <div class="ngo-card">
+                            <div class="ngo-header">
+                                <div>
+                                    <div class="ngo-name">${ngo.name}</div>
+                                </div>
+                                <div class="ngo-rating">
+                                    ⭐ ${ngo.rating || 4.5}
+                                </div>
+                            </div>
+                            <div class="ngo-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Location</div>
+                                    <div class="detail-value">${ngo.city}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Type</div>
+                                    <div class="detail-value">${ngo.organization_type.replace('_', ' ')}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Meals Delivered</div>
+                                    <div class="detail-value">${ngo.meals_delivered || 0}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Rating</div>
+                                    <div class="detail-value">${ngo.rating || 4.5}/5.0</div>
+                                </div>
+                            </div>
+                            <div class="ngo-actions">
+                                <button class="action-btn btn-primary" onclick="contactNGO(${ngo.id})">
+                                    Contact
+                                </button>
+                                <button class="action-btn btn-secondary" onclick="viewNGO(${ngo.id})">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
                 </div>
             `;
-            
-            return div;
         }
 
-        // Get connection status text
-        function getConnectionStatusText(status) {
-            switch(status) {
-                case 'connected': return '✅ Connected';
-                case 'pending': return '⏳ Pending';
-                case 'new': return '🆕 New';
-                default: return '❓ Unknown';
-            }
-        }
-
-        // Get action buttons
-        function getActionButtons(ngo) {
-            if (ngo.acceptsDonations) {
-                return `
-                    <button class="action-btn btn-primary" onclick="contactNGO(${ngo.id})">📞 Contact</button>
-                    <button class="action-btn btn-primary" onclick="viewDetails(${ngo.id})">👁️ View Details</button>
-                    <button class="action-btn btn-secondary" onclick="getDirections(${ngo.id})">🗺️ Get Directions</button>
-                    ${ngo.connectionStatus === 'new' ? `<button class="action-btn btn-primary" onclick="connectNGO(${ngo.id})">🤝 Connect</button>` : ''}
-                `;
-            } else {
-                return `
-                    <button class="action-btn btn-secondary" onclick="viewDetails(${ngo.id})">👁️ View Details</button>
-                    <button class="action-btn btn-secondary" onclick="getDirections(${ngo.id})">🗺️ Get Directions</button>
-                `;
-            }
-        }
-
-        // Show no NGOs message
-        function showNoNGOs() {
-            const ngosList = document.getElementById('ngosList');
-            ngosList.innerHTML = `
-                <div class="no-ngos">
+        function showEmptyState(message) {
+            const container = document.getElementById('ngosContainer');
+            container.innerHTML = `
+                <div class="empty-state">
                     <h3>No NGOs found</h3>
-                    <p>Try adjusting your search parameters or expanding the search radius.</p>
+                    <p>${message}</p>
+                    <a href="dashboard.html" class="back-btn">Go to Dashboard</a>
                 </div>
             `;
         }
 
-        // Action functions
-        function contactNGO(id) {
-            const ngo = dummyNGOs.find(n => n.id === id);
-            if (ngo) {
-                alert(`Contacting ${ngo.name}\nPhone: ${ngo.phone}\nEmail: ${ngo.email}`);
-            }
+        function contactNGO(ngoId) {
+            alert(`Contacting NGO #${ngoId}`);
         }
 
-        function viewDetails(id) {
-            const ngo = dummyNGOs.find(n => n.id === id);
-            if (ngo) {
-                alert(`NGO Details: ${ngo.name}\n\nDescription: ${ngo.description}\n\nRating: ⭐ ${ngo.rating}/5.0\nMeals Delivered: ${ngo.mealsDelivered}\nLast Donation: ${ngo.lastDonation}`);
-            }
+        function viewNGO(ngoId) {
+            alert(`Viewing details for NGO #${ngoId}`);
         }
 
-        function getDirections(id) {
-            const ngo = dummyNGOs.find(n => n.id === id);
-            if (ngo) {
-                const mapsUrl = `https://www.google.com/maps?q=${ngo.latitude},${ngo.longitude}`;
-                window.open(mapsUrl, '_blank');
-            }
-        }
-
-        function connectNGO(id) {
-            const ngo = dummyNGOs.find(n => n.id === id);
-            if (ngo) {
-                ngo.connectionStatus = 'pending';
-                alert(`Connection request sent to ${ngo.name}! They will review and get back to you soon.`);
-                // Refresh the display
-                displayNGOs(dummyNGOs);
-                updateStats(dummyNGOs);
-            }
-        }
-
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', checkAuth);
+        // Load NGOs when page loads
+        document.addEventListener('DOMContentLoaded', loadNGOs);
     </script>
 </body>
 </html>
